@@ -1,0 +1,13 @@
+data_file <- 'https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip'
+temp <- tempfile()
+download.file(data_file,temp)
+all_data <- read.table(unz(temp,"household_power_consumption.txt"),sep=";",na.strings="?",header=T)
+data <- subset(all_data,Date=='1/2/2007' | Date=='2/2/2007')
+data$DateTime <- strptime(paste(data$Date,data$Time), '%d/%m/%Y %H:%M:%S')
+png(file='plot3.png')
+plot(data$DateTime, data$Sub_metering_1, type="l", ylab="Energy sub metering", xlab="")
+lines(data$DateTime, data$Sub_metering_2, col="red")
+lines(data$DateTime, data$Sub_metering_3, col="blue")
+legend("topright",col=c("black","red","blue"), legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),lty=1)
+dev.off()
+unlink(temp)
